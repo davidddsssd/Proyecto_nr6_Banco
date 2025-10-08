@@ -29,7 +29,7 @@ CREATE TABLE cuenta IF NOT EXISTS(
     numero_c VARCHAR(15) NOT NULL,
     saldo FLOAT NOT NULL,
     fecha_apertura DATETIME NOT NULL,
-    tipo_cuenta BOOLEAN NOT NULL,
+    tipo_cuenta VARCHAR(15) NOT NULL,
     estado_cuenta BOOLEAN NOT NULL,
 
     CONSTRAINT pk_cuenta PRIMARY KEY (id_cuenta),
@@ -38,7 +38,7 @@ CREATE TABLE cuenta IF NOT EXISTS(
 
 CREATE TABLE cuenta_destino IF NOT EXISTS(
     id_cuenta_destino AUTO_INCREMENT INTEGER NOT NULL,
-    tipo_cuenta VARCHAR(15) NOT NULL,
+    tipo_cuenta_destino VARCHAR(15) NOT NULL,
     estado_cuenta_destino BOOLEAN NOT NULL,
 
     CONSTRAINT pk_cuenta_destino PRIMARY KEY (id_cuenta_destino)
