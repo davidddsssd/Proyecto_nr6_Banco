@@ -1,5 +1,6 @@
 #pip install sqlalchemy
 #pip install mysql-connector-python
+#pip install prettytable
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
