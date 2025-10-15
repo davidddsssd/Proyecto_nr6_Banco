@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 class Direccion(Base):
-    __tablename__ = 'direcciones'
+    __tablename__ = 'Direcciones'
     id_direccion = Column(Integer,primary_key=True)
     comuna = Column(String(30), nullable=False)
     calle = Column(String(20), nullable=False)
