@@ -1,13 +1,14 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, Enum
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
 class Cuenta(Base):
-    __tablename__ = 'Cuentas'
-    id_cuenta = Column(Integer,primary_key=True)
-    numero_c = Column(String(15), nullable=False)
-    saldo = Column(Float, nullable=False)
-    fecha_apertura = Column(DateTime, nullable=True)
-    tipo_cuenta = Column(String(15), nullable=False)
+    __tablename__ = 'cuentas'
+    id_cuenta = Column(Integer, primary_key=True, autoincrement=True)
+    id_cliente = Column(Integer, ForeignKey('clientes.id_cliente'))
+    numero_c = Column(String(20), nullable=False, unique=True)
+    saldo = Column(Numeric(15, 2), nullable=False)
+    fecha_apertura = Column(DateTime, nullable=False)
+    tipo_cuenta = Column(Enum('corriente', 'ahorro', 'vista'), nullable=False)
     estado_cuenta = Column(Boolean, nullable=False)
