@@ -1,6 +1,5 @@
 from datos.conexion import Session
 from auxiliares.estandarizar_strings import normalizar_string
-
 from modelos.cliente import Cliente
 
 def obtener_datos_objetos(objeto):
@@ -11,12 +10,13 @@ def obtener_datos_objetos(objeto):
     finally:
         session.close()
 
-#ejemplo (cambiarlo luego)
-def obtener_cliente_nombre(nombre):
+def obtener_cliente_nombre(nombre_buscado: str) -> bool:
     listado_clientes = obtener_datos_objetos(Cliente)
-    cliente_encontrado = False
-    if listado_clientes:
-        for nombres in listado_clientes:
-            if normalizar_string(nombres.nombre) == normalizar_string(nombres):
-                cliente_encontrado = True
-    return cliente_encontrado
+    if not listado_clientes:
+        return False
+
+    nombre_normalizado = normalizar_string(nombre_buscado)
+    for cliente in listado_clientes:
+        if normalizar_string(cliente.nombre) == nombre_normalizado:
+            return True
+    return False

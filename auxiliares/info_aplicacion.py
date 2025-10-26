@@ -1,0 +1,1 @@
+nombre_aplicacion = 'Sistema de Gestión Bancaria'

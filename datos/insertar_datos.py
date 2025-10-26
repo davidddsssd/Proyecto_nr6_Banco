@@ -1,14 +1,13 @@
 from datos.conexion import Session
 
-sesion = Session()
-
 def insertar_objeto(objeto):
-    sesion.add(objeto)
+    session = Session()
+    session.add(objeto)
     try:
-        sesion.commit()
-        print("El objeto se ha insertado correctamente")
+        session.commit()
+        print("El objeto se ha insertado correctamente.")
     except Exception as e:
-        sesion.rollback()
+        session.rollback()
         print(f"Error al insertar el objeto: {e}")
     finally:
-        sesion.close()
+        session.close()
