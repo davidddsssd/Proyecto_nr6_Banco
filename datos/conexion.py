@@ -1,11 +1,18 @@
 #pip install sqlalchemy
 #pip install mysql-connector-python
 #pip install prettytable
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from auxiliares import usuario_db, servidor_db, puerto_db, nombre_db
 
-#User, password, host, port, database con sus credenciales DB
-#DATABASE_URL = "mysql+sqlconnector://root:@localhost:3306/proyecto_banco"
-DATABASE_URL = "mysql+mysqlconnector://root:@localhost:3306/proyecto_banco"
-motor_db = create_engine(DATABASE_URL, pool_pre_ping=True)
+# pip install sqlalchemy
+# pip install mysql-connector-python
+
+# Definir cadena de conexion
+# mysql+mysqlconnector://user:password@host:port/database_name
+# Reemplazar user, password, host, port, y database con sus credenciales de DB
+url_db = f"mysql+mysqlconnector://{usuario_db}:@{servidor_db}:{puerto_db}/{nombre_db}"
+motor_db = create_engine(url_db)
 Session = sessionmaker(bind=motor_db)
+sesion = Session()

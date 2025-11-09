@@ -1,6 +1,6 @@
 import unicodedata
 
-def normalizar_string(cadena: str) -> str:
+def normalizar_cadena(cadena: str) -> str:
     """
     Normaliza una cadena quitando tildes, espacios extra y pasando a minúsculas.
     Ejemplo:
@@ -9,9 +9,11 @@ def normalizar_string(cadena: str) -> str:
     if not cadena:
         return ''
     
-    # Normaliza a forma NFD para separar letras de acentos
+    # Esto es para normalizar a forma NFD y para separar letras de acentos
     s_decomposed = unicodedata.normalize('NFD', cadena)
     
-    # Filtra caracteres no base (como tildes)
+    # Filtra los caracteres (como las tildes)
     s_filtered = ''.join(c for c in s_decomposed if unicodedata.category(c) != 'Mn')
+    
+    # Quita los espacios al inicio y final, y pasa todo a minúsculas
     return s_filtered.strip().lower()

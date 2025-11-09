@@ -12,6 +12,7 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
             return
 
         cuenta.saldo += float(monto)
+
         trans = Transaccion(
             id_cuenta=cuenta.id_cuenta,
             tipo_transaccion='depósito',
@@ -19,15 +20,16 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
             descripcion=descripcion,
             fecha_transaccion=datetime.now()
         )
+
         session.add(trans)
         session.commit()
-        print(f"Depósito realizado. Nuevo saldo: ${cuenta.saldo}")
+        print(f"Depósito realizado. Nuevo saldo: ${cuenta.saldo:.2f}")
     except Exception as e:
         session.rollback()
-        print(f"Error al depositar: {e}")
+        print(f"Error al realizar depósito: {e}")
     finally:
         session.close()
-
+#def realizar_deposito()
 
 def realizar_retiro(numero_cuenta, monto, descripcion=None):
     session = Session()
@@ -41,6 +43,7 @@ def realizar_retiro(numero_cuenta, monto, descripcion=None):
             return
 
         cuenta.saldo -= float(monto)
+
         trans = Transaccion(
             id_cuenta=cuenta.id_cuenta,
             tipo_transaccion='retiro',
@@ -48,15 +51,16 @@ def realizar_retiro(numero_cuenta, monto, descripcion=None):
             descripcion=descripcion,
             fecha_transaccion=datetime.now()
         )
+
         session.add(trans)
         session.commit()
-        print(f"Retiro realizado. Nuevo saldo: ${cuenta.saldo}")
+        print(f"Retiro realizado. Nuevo saldo: ${cuenta.saldo:.2f}")
     except Exception as e:
         session.rollback()
-        print(f"Error al retirar: {e}")
+        print(f"Error al realizar retiro: {e}")
     finally:
         session.close()
-
+#def realizar_retiro()
 
 def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=None):
     session = Session()
@@ -82,6 +86,7 @@ def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=Non
             descripcion=descripcion,
             fecha_transaccion=datetime.now()
         )
+
         trans_destino = Transaccion(
             id_cuenta=destino.id_cuenta,
             tipo_transaccion='transferencia_entrada',
@@ -96,6 +101,7 @@ def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=Non
         print("Transferencia realizada con éxito.")
     except Exception as e:
         session.rollback()
-        print(f"Error en la transferencia: {e}")
+        print(f"Error al realizar transferencia: {e}")
     finally:
         session.close()
+#def realizar_transferencia()

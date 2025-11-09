@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from modelos.base import Base
 
 class Cliente(Base):
     __tablename__ = 'clientes'
+
     id_cliente = Column(Integer, primary_key=True, autoincrement=True)
     id_direccion = Column(Integer, ForeignKey('direcciones.id_direccion'))
     nombre = Column(String(30), nullable=False)

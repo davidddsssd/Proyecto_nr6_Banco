@@ -1,5 +1,6 @@
 # Proyecto : Sistema de Gestión Bancaria
-# Autor: Amanda Álvarez, David Manquilef, Neftaly Caniuñir
+# Autores  : Amanda Álvarez - David Manquilef - Neftaly Caniuñir
+# Sección  : IEC-170-N2
 
 """
 Método de versionamiento del código: Version MAYOR.MENOR.PARCHE

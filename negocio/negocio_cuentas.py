@@ -4,6 +4,7 @@ from modelos.cuenta import Cuenta
 
 def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
     cuentas = obtener_datos_objetos(Cuenta)
+
     for c in cuentas:
         if c.numero_c == numero_c:
             print("Ya existe una cuenta con ese número.")
@@ -16,4 +17,6 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
         tipo_cuenta=tipo_cuenta,
         estado_cuenta=estado
     )
+
     insertar_objeto(nueva)
+#def crear_cuenta()

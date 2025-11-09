@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Integer, String, DateTime, DECIMAL, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from modelos.base import Base
 
 class Transaccion(Base):
     __tablename__ = 'transacciones'
+
     id_transaccion = Column(Integer, primary_key=True, autoincrement=True)
     id_cuenta = Column(Integer, ForeignKey('cuentas.id_cuenta'), nullable=False)
     id_cuenta_destino = Column(Integer, ForeignKey('cuentas_destino.id_cuenta_destino'), nullable=True)
