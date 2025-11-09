@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String, DateTime, DECIMAL, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
 from modelos.base import Base
 
 class Transaccion(Base):

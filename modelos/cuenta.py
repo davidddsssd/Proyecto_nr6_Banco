@@ -1,5 +1,4 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Numeric, Enum
-from sqlalchemy.ext.declarative import declarative_base
 from modelos.base import Base
 
 class Cuenta(Base):

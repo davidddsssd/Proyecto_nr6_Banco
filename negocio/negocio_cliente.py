@@ -1,7 +1,9 @@
 from datos.insertar_datos import insertar_objeto
 from datos.obtener_datos import obtener_datos_objetos
 from modelos.cliente import Cliente
+from modelos.direccion import Direccion
 from auxiliares import normalizar_cadena
+from datos.conexion import Session
 
 def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None):
     # Validar campos obligatorios
@@ -9,27 +11,56 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
         print("Faltan datos obligatorios.")
         return
 
-    # Verificar si el cliente ya existe
-    clientes = obtener_datos_objetos(Cliente)
-    for c in clientes:
-        if normalizar_cadena(c.rut) == normalizar_cadena(rut):
-            print("Ya existe un cliente con ese RUT.")
-            return
-        if normalizar_cadena(c.telefono) == normalizar_cadena(telefono):
-            print("Ya existe un cliente con ese teléfono.")
+    # Crear sesión de base de datos
+    sesion = Session()
+
+    try:
+        # Verificar si el cliente ya existe (por RUT o teléfono)
+        clientes = sesion.query(Cliente).all()
+        for c in clientes:
+            if normalizar_cadena(c.rut) == normalizar_cadena(rut):
+                print("Ya existe un cliente con ese RUT.")
+                return
+            if normalizar_cadena(c.telefono) == normalizar_cadena(telefono):
+                print("Ya existe un cliente con ese teléfono.")
+                return
+
+        # Verificar dirección
+        if id_direccion is None:
+            print("Debe indicar un id_direccion existente (1–20).")
+            direcciones = sesion.query(Direccion).all()
+            print("\nDirecciones disponibles:")
+            for d in direcciones:
+                print(f"[{d.id_direccion}] {d.calle}, {d.comuna}")
+            try:
+                id_direccion = int(input("Ingrese el ID de la dirección: "))
+            except:
+                print("ID inválido.")
+                return
+
+        # Confirmar que la dirección existe
+        direccion = sesion.query(Direccion).filter_by(id_direccion=id_direccion).first()
+        if not direccion:
+            print("El ID de dirección no existe.")
             return
 
-    # Crear objeto Cliente
-    nuevo = Cliente(
-        id_direccion=id_direccion,
-        nombre=nombre,
-        apellido=apellido,
-        rut=rut,
-        telefono=telefono,
-        mail=mail
-    )
+        # Crear nuevo cliente
+        nuevo = Cliente(
+            id_direccion=id_direccion,
+            nombre=nombre,
+            apellido=apellido,
+            rut=rut,
+            telefono=telefono,
+            mail=mail
+        )
 
-    # Insertar en la base de datos
-    insertar_objeto(nuevo)
-    print("Cliente registrado correctamente.")
+        # Insertar cliente
+        insertar_objeto(nuevo)
+        print("Cliente registrado correctamente.")
+
+    except Exception as e:
+        print("Error al registrar cliente:", e)
+
+    finally:
+        sesion.close()
 #def crear_cliente()
