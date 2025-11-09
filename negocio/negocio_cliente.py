@@ -4,14 +4,20 @@ from modelos.cliente import Cliente
 from modelos.direccion import Direccion
 from auxiliares import normalizar_cadena
 from datos.conexion import Session
+from rut_chile import rut_chile
 
 def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None):
     # Validar campos obligatorios
     if not nombre or not apellido or not rut or not telefono:
-        print("Faltan datos obligatorios.")
+        print("Faltan datos obligatorios (nombre, apellido, RUT o teléfono).")
         return
 
-    # Crear sesión de base de datos
+    # Validar formato de RUT
+    if not rut_chile.is_valid_rut(rut):
+        print("El RUT ingresado no es válido. Ejemplo correcto: 12.345.678-9")
+        return
+
+    # Conexión a la base de datos
     sesion = Session()
 
     try:
@@ -25,26 +31,26 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
                 print("Ya existe un cliente con ese teléfono.")
                 return
 
-        # Verificar dirección
+        # Seleccionar o confirmar dirección válida
         if id_direccion is None:
-            print("Debe indicar un id_direccion existente (1–20).")
+            print("\nDebe indicar una dirección existente (ID de 1 a 20).")
             direcciones = sesion.query(Direccion).all()
-            print("\nDirecciones disponibles:")
+            print("Direcciones disponibles:")
             for d in direcciones:
-                print(f"[{d.id_direccion}] {d.calle}, {d.comuna}")
+                print(f"  [{d.id_direccion}] {d.calle}, {d.comuna}")
             try:
-                id_direccion = int(input("Ingrese el ID de la dirección: "))
+                id_direccion = int(input("\nIngrese el ID de la dirección: "))
             except:
                 print("ID inválido.")
                 return
 
-        # Confirmar que la dirección existe
+        # Confirmar que la dirección exista
         direccion = sesion.query(Direccion).filter_by(id_direccion=id_direccion).first()
         if not direccion:
-            print("El ID de dirección no existe.")
+            print("El ID de dirección no existe en la base de datos.")
             return
 
-        # Crear nuevo cliente
+        # Crear el nuevo cliente
         nuevo = Cliente(
             id_direccion=id_direccion,
             nombre=nombre,
@@ -54,7 +60,7 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
             mail=mail
         )
 
-        # Insertar cliente
+        # Insertar en la base de datos
         insertar_objeto(nuevo)
         print("Cliente registrado correctamente.")
 

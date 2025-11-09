@@ -1,3 +1,5 @@
+#pip install -r requirements.txt
+
 from iu.menu import menu_inicio
 
 if __name__ == "__main__":
