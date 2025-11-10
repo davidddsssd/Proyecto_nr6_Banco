@@ -1,6 +1,12 @@
 from datos.conexion import Session
 
 def insertar_objeto(objeto):
+    """
+    Inserta un objeto (registro) en la base de datos.
+
+    Parámetros:
+        objeto: instancia del modelo SQLAlchemy que se desea guardar.
+    """
     session = Session()
     try:
         session.add(objeto)

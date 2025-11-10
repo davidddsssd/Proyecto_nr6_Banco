@@ -8,16 +8,14 @@ from datetime import datetime
 def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
     """
     Crea una cuenta bancaria asociada a un cliente existente.
-    Validaciones:
-    - Cliente debe existir
+    Realiza las siguientes validaciones:
+    - Cliente debe existir y estar activo
     - Número de cuenta con formato 001-0001-000001
-    - Número no duplicado
-    - Saldo inicial entero y <= 5.000.000
-    - Tipo válido: corriente / ahorro / vista
+    - Saldo inicial numérico y menor o igual a $5.000.000
+    - Tipo de cuenta válido: corriente, ahorro o vista
     """
     sesion = Session()
     try:
-        # Verificar cliente
         cliente = sesion.query(Cliente).filter_by(id_cliente=id_cliente).first()
         if not cliente:
             print("No se encontró un cliente con ese ID. Regístrelo primero.")
@@ -26,17 +24,14 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
             print("El cliente está desactivado. No se puede crear una cuenta para un cliente deshabilitado.")
             return
 
-        # Validar número de cuenta
         if not re.match(r'^\d{3}-\d{4}-\d{6}$', numero_c):
             print("Formato inválido. Ejemplo: 001-0001-000001")
             return
 
-        # Revisar duplicados
         if sesion.query(Cuenta).filter_by(numero_c=numero_c).first():
             print("Ya existe una cuenta con ese número.")
             return
 
-        # Validar saldo
         try:
             saldo_inicial = int(saldo_inicial)
         except ValueError:
@@ -50,7 +45,6 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
             print("El saldo inicial no puede superar los $5.000.000.")
             return
 
-        # Validar tipo de cuenta
         tipo_cuenta = tipo_cuenta.lower()
         if tipo_cuenta not in ['corriente', 'ahorro', 'vista']:
             print("Tipo de cuenta inválido. Debe ser: corriente, ahorro o vista.")
@@ -71,7 +65,6 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
 
     except Exception as e:
         print("Error al crear cuenta:", e)
-
     finally:
         sesion.close()
 #def crear_cuenta()

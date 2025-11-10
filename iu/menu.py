@@ -1,4 +1,3 @@
-
 from iu.menu_cliente import menu_cliente
 from iu.menu_admin import menu_admin
 
@@ -8,6 +7,7 @@ def menu_inicio():
         print("[1] Ingresar como Cliente")
         print("[2] Ingresar como Administrador")
         print("[0] Salir")
+
         opcion = input("Opción: ").strip()
 
         if opcion == "1":

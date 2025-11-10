@@ -7,3 +7,4 @@ class CuentaDestino(Base):
     id_cuenta_destino = Column(Integer, primary_key=True, autoincrement=True)
     tipo_cuenta_destino = Column(String(15), nullable=False)
     estado_cuenta_destino = Column(Boolean, nullable=False)
+    nombre_titular = Column(String(60), nullable=True)

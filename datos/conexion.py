@@ -7,7 +7,7 @@ from modelos.base import Base
 url_db = f"mysql+mysqlconnector://{usuario_db}:@{servidor_db}:{puerto_db}/{nombre_db}"
 
 #Crear el motor de conexión
-motor_db = create_engine(url_db)
+motor_db = create_engine(url_db, echo=False)
 
 #Crear las tablas si no existen (esto no borra nada)
 Base.metadata.create_all(motor_db)

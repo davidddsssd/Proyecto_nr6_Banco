@@ -9,8 +9,9 @@ def validar_telefono(telefono: str) -> bool:
 
     telefono = telefono.strip()
     return telefono.isdigit() and len(telefono) == 9
+#def validar_telefono()
 
-def validar_correo(correo):
+def validar_correo(correo: str) -> bool:
     """
     Valida el formato general de un correo electrónico.
     Ejemplo válido: ejemplo@dominio.com
@@ -21,10 +22,11 @@ def validar_correo(correo):
     correo = correo.strip()
     patron = re.compile(r'^[\w\.-]+@[\w\.-]+\.\w+$')
     return bool(patron.match(correo))
+#def validar_correo()
 
-def formatear_nombre(nombre):
+def formatear_nombre(nombre: str) -> str:
     """
-    Convierte un nombre o apellido a formato: 
+    Convierte un nombre o apellido a formato:
     primera letra mayúscula, resto minúsculas.
     También elimina espacios extra.
     Ejemplo: 'aNA  ' -> 'Ana'
@@ -32,16 +34,16 @@ def formatear_nombre(nombre):
     if not nombre:
         return ""
 
-    # Divide el nombre en palabras (para nombres compuestos)
     partes = nombre.strip().split()
     partes_formateadas = [p.capitalize() for p in partes]
     return " ".join(partes_formateadas)
+#def formatear_nombre()
 
-def validar_rut_chileno(rut):
+def validar_rut_chileno(rut: str) -> bool:
     """
-    Envuelve el validador rut_chile.is_valid_rut()
-    en un try/except para evitar errores de formato.
-    Retorna True si el RUT es válido, False en caso contrario.
+    Valida el formato de un RUT en nuestro país.
+    Usa el paquete 'rut_chile' y controla errores de formato.
+    Retorna True si el RUT es válido, False si no.
     """
     try:
         from rut_chile import rut_chile
@@ -49,3 +51,4 @@ def validar_rut_chileno(rut):
         return rut_chile.is_valid_rut(rut)
     except Exception:
         return False
+#def validar_rut_chileno()

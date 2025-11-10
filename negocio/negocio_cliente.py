@@ -7,12 +7,20 @@ from datos.conexion import Session
 
 
 def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None):
-    # Validar campos obligatorios
+    """
+    Crea un nuevo cliente en la base de datos después de validar sus datos.
+
+    Realiza:
+    - Validación de RUT, correo y teléfono
+    - Normalización de texto
+    - Verificación de duplicados
+    - Asociación a una dirección existente
+    """
     if not nombre or not apellido or not rut or not telefono:
         print("Faltan datos obligatorios (nombre, apellido, RUT o teléfono).")
         return
 
-    # Limpieza básica
+    # Limpieza y normalización de campos
     nombre = formatear_nombre(nombre.strip())
     apellido = formatear_nombre(apellido.strip())
     rut = rut.strip()
@@ -20,24 +28,22 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
     if mail:
         mail = mail.strip()
 
-    # Validar RUT chileno
+    # Validaciones básicas
     if not validar_rut_chileno(rut):
-        print("El RUT ingresado no es válido. Ejemplo: 12.345.678-9")
+        print("El RUT ingresado no es válido. Ejemplo: 12345678-9")
         return
 
-    # Validar teléfono chileno
     if not validar_telefono(telefono):
-        print("El teléfono ingresado no es válido. Ejemplo: +56912345678 o 912345678")
+        print("El teléfono ingresado no es válido. Ejemplo: 912345678")
         return
 
-    # Validar correo
     if mail and not validar_correo(mail):
         print("El correo ingresado no es válido. Ejemplo: ejemplo@dominio.com")
         return
 
     sesion = Session()
     try:
-        # Verificar duplicados
+        # Verificación de duplicados
         clientes = sesion.query(Cliente).all()
         for c in clientes:
             if normalizar_cadena(c.rut) == normalizar_cadena(rut):
@@ -47,7 +53,7 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
                 print("Ya existe un cliente con ese teléfono.")
                 return
 
-        # Validar dirección
+        # Selección de dirección si no se pasa como parámetro
         if id_direccion is None:
             print("\nDebe indicar una dirección existente (ID entre 1 y 20).")
             direcciones = sesion.query(Direccion).all()
@@ -64,6 +70,7 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
             print("El ID de dirección no existe en la base de datos.")
             return
 
+        # Creación del objeto cliente
         nuevo = Cliente(
             id_direccion=id_direccion,
             nombre=nombre,
@@ -78,10 +85,10 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
 
     except Exception as e:
         print("Error al registrar cliente:", e)
-
     finally:
         sesion.close()
 #def crear_cliente()
+
 
 def desactivar_cliente(id_cliente):
     """
@@ -101,11 +108,13 @@ def desactivar_cliente(id_cliente):
         cliente.estado_cliente = False
         sesion.commit()
         print(f"Cliente {cliente.nombre} {cliente.apellido} (ID {cliente.id_cliente}) desactivado correctamente.")
+
     except Exception as e:
         sesion.rollback()
         print("Error al desactivar cliente:", e)
     finally:
         sesion.close()
+#def desactivar_cliente()
 
 
 def reactivar_cliente(id_cliente):
@@ -126,8 +135,10 @@ def reactivar_cliente(id_cliente):
         cliente.estado_cliente = True
         sesion.commit()
         print(f"Cliente {cliente.nombre} {cliente.apellido} (ID {cliente.id_cliente}) reactivado correctamente.")
+
     except Exception as e:
         sesion.rollback()
         print("Error al reactivar cliente:", e)
     finally:
         sesion.close()
+#def reactivar_cliente()

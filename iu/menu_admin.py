@@ -21,7 +21,6 @@ def menu_admin():
             rut = input("RUT: ").strip()
             telefono = input("Teléfono: ").strip()
             mail = input("Correo (opcional): ").strip()
-
             crear_cliente(nombre, apellido, rut, telefono, mail)
 
         elif opcion == "2":
@@ -35,7 +34,7 @@ def menu_admin():
                 continue
             id_cliente = int(id_cliente_str)
 
-            # Validar número de cuenta con formato
+            # Validar formato de número de cuenta (no cambiar)
             numero_c = input("Número de cuenta (formato 001-0001-000001): ").strip()
             if not re.match(r'^\d{3}-\d{4}-\d{6}$', numero_c):
                 print("Formato de número de cuenta inválido. Ejemplo: 001-0001-000001")
@@ -56,7 +55,6 @@ def menu_admin():
                 print("Tipo de cuenta inválido. Debe ser: corriente, ahorro o vista.")
                 continue
 
-            # Llamar a la función de negocio
             crear_cuenta(id_cliente, numero_c, saldo, tipo)
 
         elif opcion == "3":

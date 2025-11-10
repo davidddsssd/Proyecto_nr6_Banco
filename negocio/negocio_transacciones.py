@@ -3,8 +3,11 @@ from datos.conexion import Session
 from modelos.cuenta import Cuenta
 from modelos.transaccion import Transaccion
 
-# Depósito
 def realizar_deposito(numero_cuenta, monto, descripcion=None):
+    """
+    Realiza un depósito en una cuenta bancaria.
+    Valida que el monto sea positivo y menor a $5.000.000.
+    """
     session = Session()
     try:
         cuenta = session.query(Cuenta).filter_by(numero_c=numero_cuenta).first()
@@ -12,7 +15,6 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
             print("Cuenta no encontrada.")
             return
 
-        # Validar monto
         try:
             monto = int(monto)
         except ValueError:
@@ -27,7 +29,6 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
             return
 
         cuenta.saldo += monto
-
         trans = Transaccion(
             id_cuenta=cuenta.id_cuenta,
             tipo_transaccion='depósito',
@@ -48,8 +49,11 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
 #def realizar_deposito()
 
 
-# Retiro
 def realizar_retiro(numero_cuenta, monto, descripcion=None):
+    """
+    Realiza un retiro de una cuenta bancaria.
+    Valida que el monto sea positivo y no supere el saldo disponible.
+    """
     session = Session()
     try:
         cuenta = session.query(Cuenta).filter_by(numero_c=numero_cuenta).first()
@@ -71,7 +75,6 @@ def realizar_retiro(numero_cuenta, monto, descripcion=None):
             return
 
         cuenta.saldo -= monto
-
         trans = Transaccion(
             id_cuenta=cuenta.id_cuenta,
             tipo_transaccion='retiro',
@@ -92,8 +95,13 @@ def realizar_retiro(numero_cuenta, monto, descripcion=None):
 #def realizar_retiro()
 
 
-# Transferencia
 def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=None):
+    """
+    Realiza una transferencia entre dos cuentas bancarias.
+    Actualiza los saldos de ambas cuentas y registra dos transacciones:
+    - transferencia_salida
+    - transferencia_entrada
+    """
     session = Session()
     try:
         origen = session.query(Cuenta).filter_by(numero_c=cuenta_origen).first()
@@ -119,6 +127,7 @@ def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=Non
             print("Saldo insuficiente para realizar la transferencia.")
             return
 
+        # Actualización de saldos
         origen.saldo -= monto
         destino.saldo += monto
 
