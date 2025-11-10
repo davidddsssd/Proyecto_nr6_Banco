@@ -22,6 +22,9 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
         if not cliente:
             print("No se encontró un cliente con ese ID. Regístrelo primero.")
             return
+        if not cliente.estado_cliente:
+            print("El cliente está desactivado. No se puede crear una cuenta para un cliente deshabilitado.")
+            return
 
         # Validar número de cuenta
         if not re.match(r'^\d{3}-\d{4}-\d{6}$', numero_c):

@@ -1,4 +1,4 @@
-from negocio.negocio_cliente import crear_cliente
+from negocio.negocio_cliente import crear_cliente, desactivar_cliente, reactivar_cliente
 from negocio.negocio_cuentas import crear_cuenta
 import re
 
@@ -7,6 +7,8 @@ def menu_admin():
         print("\n*** Menú del Administrador ***")
         print("[1] Registrar nuevo cliente")
         print("[2] Crear cuenta bancaria")
+        print("[3] Desactivar cliente")
+        print("[4] Reactivar cliente")
         print("[0] Volver al menú anterior")
 
         opcion = input("Opción: ").strip()
@@ -56,6 +58,22 @@ def menu_admin():
 
             # Llamar a la función de negocio
             crear_cuenta(id_cliente, numero_c, saldo, tipo)
+
+        elif opcion == "3":
+            try:
+                id_cliente = int(input("ID del cliente a desactivar: ").strip())
+            except ValueError:
+                print("El ID debe ser un número entero válido.")
+                continue
+            desactivar_cliente(id_cliente)
+
+        elif opcion == "4":
+            try:
+                id_cliente = int(input("ID del cliente a reactivar: ").strip())
+            except ValueError:
+                print("El ID debe ser un número entero válido.")
+                continue
+            reactivar_cliente(id_cliente)
 
         elif opcion == "0":
             break

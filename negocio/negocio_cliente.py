@@ -82,3 +82,52 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
     finally:
         sesion.close()
 #def crear_cliente()
+
+def desactivar_cliente(id_cliente):
+    """
+    Marca un cliente como inactivo (borrado lógico).
+    """
+    sesion = Session()
+    try:
+        cliente = sesion.query(Cliente).filter_by(id_cliente=id_cliente).first()
+        if not cliente:
+            print("No se encontró un cliente con ese ID.")
+            return
+
+        if not cliente.estado_cliente:
+            print("El cliente ya se encuentra desactivado.")
+            return
+
+        cliente.estado_cliente = False
+        sesion.commit()
+        print(f"Cliente {cliente.nombre} {cliente.apellido} (ID {cliente.id_cliente}) desactivado correctamente.")
+    except Exception as e:
+        sesion.rollback()
+        print("Error al desactivar cliente:", e)
+    finally:
+        sesion.close()
+
+
+def reactivar_cliente(id_cliente):
+    """
+    Vuelve a activar un cliente previamente desactivado.
+    """
+    sesion = Session()
+    try:
+        cliente = sesion.query(Cliente).filter_by(id_cliente=id_cliente).first()
+        if not cliente:
+            print("No se encontró un cliente con ese ID.")
+            return
+
+        if cliente.estado_cliente:
+            print("El cliente ya está activo.")
+            return
+
+        cliente.estado_cliente = True
+        sesion.commit()
+        print(f"Cliente {cliente.nombre} {cliente.apellido} (ID {cliente.id_cliente}) reactivado correctamente.")
+    except Exception as e:
+        sesion.rollback()
+        print("Error al reactivar cliente:", e)
+    finally:
+        sesion.close()

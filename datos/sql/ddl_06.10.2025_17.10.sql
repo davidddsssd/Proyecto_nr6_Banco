@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS clientes (
     rut VARCHAR(12) NOT NULL UNIQUE,
     telefono VARCHAR(15) NOT NULL UNIQUE,
     mail VARCHAR(50) NULL,
+    estado_cliente BOOLEAN NOT NULL DEFAULT 1,
 
     CONSTRAINT pk_cliente PRIMARY KEY (id_cliente),
     CONSTRAINT fk_direccion FOREIGN KEY (id_direccion) REFERENCES direcciones(id_direccion)
