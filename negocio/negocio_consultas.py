@@ -7,7 +7,7 @@ def consultar_saldo(numero_cuenta):
     try:
         cuenta = session.query(Cuenta).filter_by(numero_c=numero_cuenta).first()
         if cuenta:
-            print(f"Saldo actual: ${cuenta.saldo:.2f}")
+            print(f"Saldo actual: ${cuenta.saldo:,}")
             return cuenta.saldo
         else:
             print("Cuenta no encontrada.")
@@ -34,7 +34,8 @@ def listar_movimientos(numero_cuenta):
 
         print(f"\nMovimientos de la cuenta {numero_cuenta}:")
         for t in transacciones:
-            print(f"- [{t.fecha_transaccion}] {t.tipo_transaccion.capitalize()} ${t.monto:.2f} | {t.descripcion or ''}")
+            print(f"[{t.fecha_transaccion}] {t.tipo_transaccion.capitalize()} ${t.monto:,} | {t.descripcion or ''}")
+
     finally:
         session.close()
 #def listar_movimientos()

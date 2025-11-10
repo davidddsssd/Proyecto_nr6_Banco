@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, DECIMAL, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from modelos.base import Base
 
 class Transaccion(Base):
@@ -9,5 +9,5 @@ class Transaccion(Base):
     id_cuenta_destino = Column(Integer, ForeignKey('cuentas_destino.id_cuenta_destino'), nullable=True)
     tipo_transaccion = Column(String(12), nullable=False)
     fecha_transaccion = Column(DateTime, nullable=False)
-    monto = Column(DECIMAL(15, 2), nullable=False)
+    monto = Column(Integer, nullable=False)
     descripcion = Column(String(100))

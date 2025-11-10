@@ -3,6 +3,7 @@ from datos.conexion import Session
 from modelos.cuenta import Cuenta
 from modelos.transaccion import Transaccion
 
+# Depósito
 def realizar_deposito(numero_cuenta, monto, descripcion=None):
     session = Session()
     try:
@@ -11,7 +12,21 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
             print("Cuenta no encontrada.")
             return
 
-        cuenta.saldo += float(monto)
+        # Validar monto
+        try:
+            monto = int(monto)
+        except ValueError:
+            print("El monto debe ser un número entero válido.")
+            return
+
+        if monto <= 0:
+            print("El monto debe ser mayor que 0.")
+            return
+        if monto > 5000000:
+            print("No se puede depositar más de $5.000.000 por operación.")
+            return
+
+        cuenta.saldo += monto
 
         trans = Transaccion(
             id_cuenta=cuenta.id_cuenta,
@@ -23,7 +38,8 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
 
         session.add(trans)
         session.commit()
-        print(f"Depósito realizado. Nuevo saldo: ${cuenta.saldo:.2f}")
+        print(f"Depósito realizado correctamente. Nuevo saldo: ${cuenta.saldo:,}")
+
     except Exception as e:
         session.rollback()
         print(f"Error al realizar depósito: {e}")
@@ -31,6 +47,8 @@ def realizar_deposito(numero_cuenta, monto, descripcion=None):
         session.close()
 #def realizar_deposito()
 
+
+# Retiro
 def realizar_retiro(numero_cuenta, monto, descripcion=None):
     session = Session()
     try:
@@ -38,11 +56,21 @@ def realizar_retiro(numero_cuenta, monto, descripcion=None):
         if not cuenta:
             print("Cuenta no encontrada.")
             return
-        if cuenta.saldo < float(monto):
+
+        try:
+            monto = int(monto)
+        except ValueError:
+            print("El monto debe ser un número entero válido.")
+            return
+
+        if monto <= 0:
+            print("El monto debe ser mayor que 0.")
+            return
+        if cuenta.saldo < monto:
             print("Saldo insuficiente.")
             return
 
-        cuenta.saldo -= float(monto)
+        cuenta.saldo -= monto
 
         trans = Transaccion(
             id_cuenta=cuenta.id_cuenta,
@@ -54,7 +82,8 @@ def realizar_retiro(numero_cuenta, monto, descripcion=None):
 
         session.add(trans)
         session.commit()
-        print(f"Retiro realizado. Nuevo saldo: ${cuenta.saldo:.2f}")
+        print(f"Retiro realizado correctamente. Nuevo saldo: ${cuenta.saldo:,}")
+
     except Exception as e:
         session.rollback()
         print(f"Error al realizar retiro: {e}")
@@ -62,6 +91,8 @@ def realizar_retiro(numero_cuenta, monto, descripcion=None):
         session.close()
 #def realizar_retiro()
 
+
+# Transferencia
 def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=None):
     session = Session()
     try:
@@ -71,12 +102,25 @@ def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=Non
         if not origen or not destino:
             print("Cuenta origen o destino no encontrada.")
             return
-        if origen.saldo < float(monto):
-            print("Saldo insuficiente para transferir.")
+
+        try:
+            monto = int(monto)
+        except ValueError:
+            print("El monto debe ser un número entero válido.")
             return
 
-        origen.saldo -= float(monto)
-        destino.saldo += float(monto)
+        if monto <= 0:
+            print("El monto debe ser mayor que 0.")
+            return
+        if monto > 5000000:
+            print("No se puede transferir más de $5.000.000 por operación.")
+            return
+        if origen.saldo < monto:
+            print("Saldo insuficiente para realizar la transferencia.")
+            return
+
+        origen.saldo -= monto
+        destino.saldo += monto
 
         trans_origen = Transaccion(
             id_cuenta=origen.id_cuenta,
@@ -98,7 +142,9 @@ def realizar_transferencia(cuenta_origen, cuenta_destino, monto, descripcion=Non
 
         session.add_all([trans_origen, trans_destino])
         session.commit()
-        print("Transferencia realizada con éxito.")
+        print("Transferencia realizada correctamente.")
+        print(f"Saldo origen: ${origen.saldo:,} | Saldo destino: ${destino.saldo:,}")
+
     except Exception as e:
         session.rollback()
         print(f"Error al realizar transferencia: {e}")

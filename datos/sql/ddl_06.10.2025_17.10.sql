@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS cuentas (
     id_cuenta INT AUTO_INCREMENT,
     id_cliente INT,
     numero_c VARCHAR(20) NOT NULL UNIQUE,
-    saldo DECIMAL(15,2) NOT NULL,
+    saldo INT NOT NULL,
     fecha_apertura DATETIME NOT NULL,
     tipo_cuenta ENUM('corriente', 'ahorro', 'vista') NOT NULL,
     estado_cuenta BOOLEAN NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS transacciones (
     id_cuenta_destino INT,
     tipo_transaccion VARCHAR(12) NOT NULL,
     fecha_transaccion DATETIME NOT NULL,
-    monto DECIMAL(15,2) NOT NULL,
+    monto INT NOT NULL,
     descripcion VARCHAR(100) NULL,
     
     CONSTRAINT pk_transaccion PRIMARY KEY (id_transaccion),
