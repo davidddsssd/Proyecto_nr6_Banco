@@ -1,21 +1,14 @@
 import re
 
-def validar_telefono(telefono):
+def validar_telefono(telefono: str) -> bool:
     """
-    Valida que el teléfono:
-    - Comience con +56 o 9
-    - Tenga solo dígitos (más el + opcional)
-    - Tenga el formato correcto
+    Valida que el teléfono tenga exactamente 9 dígitos numéricos.
     """
     if not telefono:
         return False
 
     telefono = telefono.strip()
-
-    # Expresión regular: permite +56 opcional, luego 9 y 8 dígitos
-    patron = re.compile(r'^(?:\+?56)?9\d{8}$')
-
-    return bool(patron.match(telefono))
+    return telefono.isdigit() and len(telefono) == 9
 
 def validar_correo(correo):
     """
