@@ -3,8 +3,9 @@ from datos.obtener_datos import obtener_datos_objetos
 from modelos.cliente import Cliente
 from modelos.direccion import Direccion
 from auxiliares import normalizar_cadena
+from auxiliares.validaciones import (validar_telefono, validar_correo, formatear_nombre, validar_rut_chileno)
 from datos.conexion import Session
-from rut_chile import rut_chile
+
 
 def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None):
     # Validar campos obligatorios
@@ -12,9 +13,31 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
         print("Faltan datos obligatorios (nombre, apellido, RUT o teléfono).")
         return
 
-    # Validar formato de RUT
-    if not rut_chile.is_valid_rut(rut):
+    # Limpieza básica
+    nombre = nombre.strip()
+    apellido = apellido.strip()
+    rut = rut.strip()
+    telefono = telefono.strip()
+    if mail:
+        mail = mail.strip()
+
+    # Formatear nombre y apellido (mayúscula inicial)
+    nombre = formatear_nombre(nombre)
+    apellido = formatear_nombre(apellido)
+
+    # Validar formato de RUT chileno
+    if not validar_rut_chileno(rut):
         print("El RUT ingresado no es válido. Ejemplo correcto: 12.345.678-9")
+        return
+
+    # Validar formato de teléfono chileno
+    if not validar_telefono(telefono):
+        print("El teléfono ingresado no es válido. Ejemplo correcto: +56912345678 o 912345678")
+        return
+
+    # Validar formato de correo electrónico (si se ingresó)
+    if mail and not validar_correo(mail):
+        print("El correo ingresado no es válido. Ejemplo: ejemplo@dominio.com")
         return
 
     # Conexión a la base de datos
@@ -40,8 +63,8 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
                 print(f"  [{d.id_direccion}] {d.calle}, {d.comuna}")
             try:
                 id_direccion = int(input("\nIngrese el ID de la dirección: "))
-            except:
-                print("ID inválido.")
+            except ValueError:
+                print("ID inválido. Debe ser un número entero.")
                 return
 
         # Confirmar que la dirección exista
@@ -62,7 +85,7 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
 
         # Insertar en la base de datos
         insertar_objeto(nuevo)
-        print("Cliente registrado correctamente.")
+        print("Cliente registrado correctamente con datos válidos.")
 
     except Exception as e:
         print("Error al registrar cliente:", e)
