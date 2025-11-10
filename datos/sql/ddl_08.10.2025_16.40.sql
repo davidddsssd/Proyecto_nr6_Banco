@@ -87,23 +87,23 @@ INSERT INTO cuentas_destino (tipo_cuenta_destino, estado_cuenta_destino, nombre_
 ('ahorro', 1, 'Claudia Espinoza');
 
 INSERT INTO transacciones (id_cuenta, id_cuenta_destino, tipo_transaccion, fecha_transaccion, monto, descripcion) VALUES
-(1, 1, 'transferencia', '2024-07-01 12:00:00', 25000, 'Pago de servicios básicos'),
-(2, 2, 'transferencia', '2024-07-02 15:45:00', 50000, 'Ahorro mensual'),
+(1, 1, 'transf', '2024-07-01 12:00:00', 25000, 'Pago de servicios básicos'),
+(2, 2, 'transf', '2024-07-02 15:45:00', 50000, 'Ahorro mensual'),
 (3, 3, 'retiro', '2024-07-03 09:10:00', 100000, 'Retiro en efectivo'),
 (4, 4, 'depósito', '2024-07-04 10:30:00', 75000, 'Depósito en cuenta'),
-(5, 5, 'transferencia', '2024-07-05 11:00:00', 120000, 'Pago crédito'),
-(6, 6, 'transferencia', '2024-07-06 13:20:00', 95000, 'Transferencia familiar'),
+(5, 5, 'transf', '2024-07-05 11:00:00', 120000, 'Pago crédito'),
+(6, 6, 'transf', '2024-07-06 13:20:00', 95000, 'Transferencia familiar'),
 (7, 7, 'depósito', '2024-07-07 08:40:00', 30000, 'Depósito caja'),
 (8, 8, 'retiro', '2024-07-08 09:50:00', 70000, 'Retiro cajero'),
-(9, 9, 'transferencia', '2024-07-09 14:00:00', 150000, 'Pago servicios'),
+(9, 9, 'transf', '2024-07-09 14:00:00', 150000, 'Pago servicios'),
 (10, 10, 'depósito', '2024-07-10 16:20:00', 200000, 'Depósito cliente'),
-(11, 11, 'transferencia', '2024-07-11 12:45:00', 50000, 'Pago arriendo'),
+(11, 11, 'transf', '2024-07-11 12:45:00', 50000, 'Pago arriendo'),
 (12, 12, 'retiro', '2024-07-12 09:30:00', 60000, 'Retiro efectivo'),
 (13, 13, 'depósito', '2024-07-13 11:10:00', 80000, 'Depósito efectivo'),
-(14, 14, 'transferencia', '2024-07-14 13:00:00', 120000, 'Pago servicios'),
+(14, 14, 'transf', '2024-07-14 13:00:00', 120000, 'Pago servicios'),
 (15, 15, 'retiro', '2024-07-15 15:25:00', 45000, 'Retiro cajero'),
 (16, 16, 'depósito', '2024-07-16 10:15:00', 90000, 'Depósito transferencia'),
-(17, 17, 'transferencia', '2024-07-17 12:35:00', 75000, 'Pago proveedor'),
+(17, 17, 'transf', '2024-07-17 12:35:00', 75000, 'Pago proveedor'),
 (18, 18, 'retiro', '2024-07-18 09:50:00', 30000, 'Retiro efectivo'),
 (19, 19, 'depósito', '2024-07-19 14:20:00', 110000, 'Depósito cuenta'),
-(20, 20, 'transferencia', '2024-07-20 16:40:00', 125000, 'Pago servicios');
+(20, 20, 'transf', '2024-07-20 16:40:00', 125000, 'Pago servicios');
