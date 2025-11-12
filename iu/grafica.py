@@ -43,7 +43,7 @@ class BancoApp(tk.Tk):
         
         # Lista de todas las vistas
         for F in (MainMenu, AdminMenu, ClientMenu, RegisterClientView, CreateAccountView,
-                 ConsultarSaldoView, VerMovimientosView, DepositarView, RetirarView, TransferirView):
+                  ConsultarSaldoView, VerMovimientosView, DepositarView, RetirarView, TransferirView):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -115,17 +115,30 @@ class MainMenu(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="*** Bienvenido al Sistema de Gestión Bancaria ***", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         ttk.Button(self, text="[1] Ingresar como Cliente",
-                  command=lambda: controller.show_frame(ClientMenu)).grid(row=1, column=0, pady=5, padx=20, sticky='ew')
+                   command=lambda: controller.show_frame(ClientMenu)).grid(row=1, column=0, pady=5, padx=20, sticky='ew')
 
+        # --- MODIFICACIÓN AQUÍ ---
+        # El 'command' ahora llama a la función de mantenimiento
         ttk.Button(self, text="[2] Ingresar como Administrador",
-                  command=lambda: controller.show_frame(AdminMenu)).grid(row=2, column=0, pady=5, padx=20, sticky='ew')
+                   command=self.mostrar_aviso_mantenimiento).grid(row=2, column=0, pady=5, padx=20, sticky='ew')
+        # --- FIN DE LA MODIFICACIÓN ---
 
         ttk.Button(self, text="[0] Salir",
-                  style='Back.TButton',
-                  command=controller.quit).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=controller.quit).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
+
+    # --- MÉTODO NUEVO AÑADIDO ---
+    def mostrar_aviso_mantenimiento(self):
+        """
+        Muestra una ventana emergente (messagebox) informando
+        que esta sección está en mantenimiento.
+        """
+        messagebox.showinfo("Mantenimiento", 
+                            "El panel de administrador está temporalmente en mantenimiento. Disculpe las molestias.")
+    # --- FIN DEL MÉTODO NUEVO ---
 
 class AdminMenu(ttk.Frame):
     def __init__(self, parent, controller):
@@ -133,17 +146,17 @@ class AdminMenu(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="*** Menú del Administrador ***", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         ttk.Button(self, text="[1] Registrar nuevo cliente",
-                  command=lambda: controller.show_frame(RegisterClientView)).grid(row=1, column=0, pady=5, padx=20, sticky='ew')
+                   command=lambda: controller.show_frame(RegisterClientView)).grid(row=1, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="[2] Crear cuenta bancaria",
-                  command=lambda: controller.show_frame(CreateAccountView)).grid(row=2, column=0, pady=5, padx=20, sticky='ew')
+                   command=lambda: controller.show_frame(CreateAccountView)).grid(row=2, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="[0] Volver al menú anterior",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(MainMenu)).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(MainMenu)).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
 
 class RegisterClientView(ttk.Frame):
     def __init__(self, parent, controller):
@@ -152,12 +165,12 @@ class RegisterClientView(ttk.Frame):
         self.grid_columnconfigure(1, weight=1)
 
         ttk.Label(self, text="Registrar Nuevo Cliente", 
-                 style='Header.TLabel').grid(row=0, column=0, columnspan=2, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, columnspan=2, pady=20)
 
         # Campos del formulario
         campos = [("Nombre:", "nombre"), ("Apellido:", "apellido"), 
-                 ("RUT:", "rut"), ("Teléfono:", "telefono"), 
-                 ("Correo (opcional):", "mail")]
+                  ("RUT:", "rut"), ("Teléfono:", "telefono"), 
+                  ("Correo (opcional):", "mail")]
 
         self.entries = {}
         for i, (label, campo) in enumerate(campos, 1):
@@ -167,12 +180,12 @@ class RegisterClientView(ttk.Frame):
 
         # Botones
         ttk.Button(self, text="Volver",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(AdminMenu)).grid(row=len(campos)+1, column=0, pady=20, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(AdminMenu)).grid(row=len(campos)+1, column=0, pady=20, padx=20, sticky='ew')
 
         ttk.Button(self, text="Registrar",
-                  style='Action.TButton',
-                  command=self.registrar_cliente).grid(row=len(campos)+1, column=1, pady=20, padx=20, sticky='ew')
+                   style='Action.TButton',
+                   command=self.registrar_cliente).grid(row=len(campos)+1, column=1, pady=20, padx=20, sticky='ew')
 
     def registrar_cliente(self):
         datos = {campo: entry.get().strip() for campo, entry in self.entries.items()}
@@ -185,7 +198,7 @@ class RegisterClientView(ttk.Frame):
         try:
             # Llamar a la función de negocio
             crear_cliente(datos['nombre'], datos['apellido'], datos['rut'], 
-                        datos['telefono'], datos['mail'])
+                          datos['telefono'], datos['mail'])
             messagebox.showinfo("Éxito", "Cliente registrado correctamente")
             self.controller.show_frame(AdminMenu)
         except Exception as e:
@@ -198,7 +211,7 @@ class CreateAccountView(ttk.Frame):
         self.grid_columnconfigure(1, weight=1)
 
         ttk.Label(self, text="Crear Cuenta Bancaria", 
-                 style='Header.TLabel').grid(row=0, column=0, columnspan=2, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, columnspan=2, pady=20)
 
         # Campos del formulario
         ttk.Label(self, text="ID del Cliente:").grid(row=1, column=0, padx=(20,10), pady=5, sticky='w')
@@ -219,12 +232,12 @@ class CreateAccountView(ttk.Frame):
 
         # Botones
         ttk.Button(self, text="Volver",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(AdminMenu)).grid(row=5, column=0, pady=20, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(AdminMenu)).grid(row=5, column=0, pady=20, padx=20, sticky='ew')
 
         ttk.Button(self, text="Crear Cuenta",
-                  style='Action.TButton',
-                  command=self.crear_cuenta).grid(row=5, column=1, pady=20, padx=20, sticky='ew')
+                   style='Action.TButton',
+                   command=self.crear_cuenta).grid(row=5, column=1, pady=20, padx=20, sticky='ew')
 
     def crear_cuenta(self):
         try:
@@ -247,7 +260,7 @@ class ClientMenu(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="*** Menú del Cliente ***", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         opciones = [
             ("Consultar saldo", ConsultarSaldoView),
@@ -259,11 +272,11 @@ class ClientMenu(ttk.Frame):
 
         for i, (texto, vista) in enumerate(opciones, 1):
             ttk.Button(self, text=f"[{i}] {texto}",
-                      command=lambda v=vista: controller.show_frame(v)).grid(row=i, column=0, pady=5, padx=20, sticky='ew')
+                       command=lambda v=vista: controller.show_frame(v)).grid(row=i, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="[0] Volver al menú anterior",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(MainMenu)).grid(row=len(opciones)+1, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(MainMenu)).grid(row=len(opciones)+1, column=0, pady=5, padx=20, sticky='ew')
 
 class ConsultarSaldoView(ttk.Frame):
     def __init__(self, parent, controller):
@@ -271,21 +284,21 @@ class ConsultarSaldoView(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="Consultar Saldo", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         ttk.Label(self, text="Número de cuenta:").grid(row=1, column=0, pady=5)
         self.cuenta = ttk.Entry(self)
         self.cuenta.grid(row=2, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Consultar",
-                  command=self.consultar).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
+                   command=self.consultar).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
 
         self.resultado = ttk.Label(self, text="")
         self.resultado.grid(row=4, column=0, pady=20)
 
         ttk.Button(self, text="Volver",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(ClientMenu)).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(ClientMenu)).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
 
     def consultar(self):
         try:
@@ -305,21 +318,21 @@ class VerMovimientosView(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="Ver Movimientos", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         ttk.Label(self, text="Número de cuenta:").grid(row=1, column=0, pady=5)
         self.cuenta = ttk.Entry(self)
         self.cuenta.grid(row=2, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Consultar",
-                  command=self.ver_movimientos).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
+                   command=self.ver_movimientos).grid(row=3, column=0, pady=5, padx=20, sticky='ew')
 
         self.resultado = ttk.Label(self, text="")
         self.resultado.grid(row=4, column=0, pady=20)
 
         ttk.Button(self, text="Volver",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(ClientMenu)).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(ClientMenu)).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
 
     def ver_movimientos(self):
         try:
@@ -340,7 +353,7 @@ class DepositarView(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="Depositar Dinero", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         ttk.Label(self, text="Número de cuenta:").grid(row=1, column=0, pady=5)
         self.cuenta = ttk.Entry(self)
@@ -351,12 +364,12 @@ class DepositarView(ttk.Frame):
         self.monto.grid(row=4, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Depositar",
-                  style='Action.TButton',
-                  command=self.depositar).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
+                   style='Action.TButton',
+                   command=self.depositar).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Volver",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(ClientMenu)).grid(row=6, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(ClientMenu)).grid(row=6, column=0, pady=5, padx=20, sticky='ew')
 
     def depositar(self):
         try:
@@ -377,7 +390,7 @@ class RetirarView(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="Retirar Dinero", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         ttk.Label(self, text="Número de cuenta:").grid(row=1, column=0, pady=5)
         self.cuenta = ttk.Entry(self)
@@ -388,12 +401,12 @@ class RetirarView(ttk.Frame):
         self.monto.grid(row=4, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Retirar",
-                  style='Action.TButton',
-                  command=self.retirar).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
+                   style='Action.TButton',
+                   command=self.retirar).grid(row=5, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Volver",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(ClientMenu)).grid(row=6, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(ClientMenu)).grid(row=6, column=0, pady=5, padx=20, sticky='ew')
 
     def retirar(self):
         try:
@@ -414,7 +427,7 @@ class TransferirView(ttk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         ttk.Label(self, text="Transferir Dinero", 
-                 style='Header.TLabel').grid(row=0, column=0, pady=20)
+                  style='Header.TLabel').grid(row=0, column=0, pady=20)
 
         ttk.Label(self, text="Cuenta origen:").grid(row=1, column=0, pady=5)
         self.cuenta_origen = ttk.Entry(self)
@@ -429,12 +442,12 @@ class TransferirView(ttk.Frame):
         self.monto.grid(row=6, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Transferir",
-                  style='Action.TButton',
-                  command=self.transferir).grid(row=7, column=0, pady=5, padx=20, sticky='ew')
+                   style='Action.TButton',
+                   command=self.transferir).grid(row=7, column=0, pady=5, padx=20, sticky='ew')
 
         ttk.Button(self, text="Volver",
-                  style='Back.TButton',
-                  command=lambda: controller.show_frame(ClientMenu)).grid(row=8, column=0, pady=5, padx=20, sticky='ew')
+                   style='Back.TButton',
+                   command=lambda: controller.show_frame(ClientMenu)).grid(row=8, column=0, pady=5, padx=20, sticky='ew')
 
     def transferir(self):
         try:
