@@ -1,7 +1,8 @@
-from negocio.negocio_cliente import crear_cliente, desactivar_cliente, reactivar_cliente
+from negocio.negocio_cliente import crear_cliente, desactivar_cliente, reactivar_cliente, modificar_cliente
 from negocio.negocio_cuentas import crear_cuenta
 from auxiliares.direcciones_base import listar_regiones, listar_comunas_por_region, obtener_comuna
 import re
+
 
 def menu_admin():
     while True:
@@ -10,6 +11,7 @@ def menu_admin():
         print("[2] Crear cuenta bancaria")
         print("[3] Desactivar cliente")
         print("[4] Reactivar cliente")
+        print("[5] Modificar cliente")
         print("[0] Volver al menú anterior")
 
         opcion = input("Opción: ").strip()
@@ -131,6 +133,15 @@ def menu_admin():
                 print("El ID debe ser un número entero válido.")
                 continue
             reactivar_cliente(id_cliente)
+
+        # === 5. Modificar cliente ===
+        elif opcion == "5":
+            try:
+                id_cliente = int(input("ID del cliente a modificar: ").strip())
+            except ValueError:
+                print("El ID debe ser un número entero válido.")
+                continue
+            modificar_cliente(id_cliente)
 
         # === 0. Volver ===
         elif opcion == "0":
