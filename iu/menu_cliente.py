@@ -5,7 +5,7 @@ from negocio.negocio_consultas import consultar_saldo, listar_movimientos
 
 def menu_cliente():
     while True:
-        print("\n*** Menú del Cliente ***")
+        print("\n==== Menú del Cliente ====")
         print("[1] Consultar saldo")
         print("[2] Ver movimientos")
         print("[3] Depositar dinero")

@@ -1,11 +1,4 @@
-# auxiliares/direcciones_base.py
-"""
-Base de datos local de regiones y comunas de Chile.
-Organizada por región para facilitar la selección de dirección
-en el registro de clientes.
-"""
-
-# Diccionario principal: Región → Lista de Comunas
+# Diccionario: Región → Lista de Comunas
 REGIONES_Y_COMUNAS = {
     "XV Región de Arica y Parinacota": [
         "Arica", "Camarones", "Putre", "General Lagos"
@@ -116,19 +109,22 @@ REGIONES_Y_COMUNAS = {
     ]
 }
 
-# --- Funciones auxiliares ---
+#Funciones auxiliares
 
 def listar_regiones():
-    """Devuelve una lista con los nombres de todas las regiones."""
+    """Devuelve una lista con los nombres de todas las regiones"""
     return list(REGIONES_Y_COMUNAS.keys())
+#def listar_regiones()
 
 def listar_comunas_por_region(region: str):
-    """Devuelve la lista de comunas de una región específica."""
+    """Devuelve la lista de comunas de una región específica"""
     return REGIONES_Y_COMUNAS.get(region, [])
+#def listar_comunas_por_region()
 
 def obtener_comuna(region: str, indice: int):
-    """Devuelve una comuna por índice dentro de una región."""
+    """Devuelve una comuna por índice dentro de una región"""
     comunas = listar_comunas_por_region(region)
     if 1 <= indice <= len(comunas):
         return comunas[indice - 1]
     return None
+#def obtener_comuna()

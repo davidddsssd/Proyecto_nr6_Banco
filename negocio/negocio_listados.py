@@ -6,7 +6,7 @@ from datos.conexion import Session
 
 def listar_clientes():
     """
-    Muestra todos los clientes registrados con sus datos principales.
+    Muestra todos los clientes registrados con sus datos principales
     """
     sesion = Session()
     try:
@@ -15,7 +15,7 @@ def listar_clientes():
             print("No hay clientes registrados.")
             return
 
-        print("\n--- LISTADO DE CLIENTES ---")
+        print("\n==== LISTADO DE CLIENTES ====")
         for c in clientes:
             estado = "Activo" if c.estado_cliente else "Inactivo"
             print(f"\nID: {c.id_cliente}")
@@ -35,8 +35,7 @@ def listar_clientes():
 
 def listar_cuentas():
     """
-    Muestra las cuentas junto con los datos del cliente asociado.
-    Adaptado al modelo con campo 'tipo_cuenta'.
+    Muestra las cuentas junto con los datos del cliente asociado
     """
     sesion = Session()
     try:
@@ -45,15 +44,14 @@ def listar_cuentas():
             print("No hay cuentas registradas.")
             return
 
-        print("\n--- LISTADO DE CUENTAS BANCARIAS ---")
+        print("\n==== LISTADO DE CUENTAS BANCARIAS ====")
         for cuenta in cuentas:
-            # Buscar el cliente asociado
             cliente = sesion.query(Cliente).filter_by(id_cliente=cuenta.id_cliente).first()
 
             if cliente:
                 print(f"\nCliente: {cliente.nombre} {cliente.apellido} (RUT: {cliente.rut})")
             else:
-                print("\nCliente: [No encontrado]")
+                print("\nCliente: No encontrado")
 
             print(f"N° Cuenta: {cuenta.numero_c}")
             print(f"Tipo: {cuenta.tipo_cuenta}")
@@ -71,7 +69,7 @@ def listar_cuentas():
 
 def listar_direcciones():
     """
-    Muestra las direcciones asociadas a los clientes.
+    Muestra las direcciones asociadas a los clientes
     """
     sesion = Session()
     try:
@@ -80,7 +78,7 @@ def listar_direcciones():
             print("No hay clientes registrados.")
             return
 
-        print("\n--- LISTADO DE DIRECCIONES DE CLIENTES ---")
+        print("\n==== LISTADO DE DIRECCIONES DE CLIENTES ====")
         for c in clientes:
             direccion = sesion.query(Direccion).filter_by(id_direccion=c.id_direccion).first()
             if not direccion:

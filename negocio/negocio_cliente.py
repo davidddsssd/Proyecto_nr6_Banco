@@ -1,18 +1,12 @@
 from modelos.cliente import Cliente
 from modelos.direccion import Direccion
 from auxiliares import normalizar_cadena
-from auxiliares.validaciones import (
-    validar_telefono,
-    validar_correo,
-    formatear_nombre,
-    validar_rut_chileno
-)
+from auxiliares.validaciones import (validar_telefono, validar_correo, formatear_nombre, validar_rut_chileno)
 from auxiliares.direcciones_base import listar_regiones, listar_comunas_por_region, obtener_comuna
 from datos.conexion import Session
 
 
-def crear_cliente(nombre, apellido, rut, telefono, mail=None,
-                  comuna=None, calle=None, departamento=None, numero_d=None):
+def crear_cliente(nombre, apellido, rut, telefono, mail=None, comuna=None, calle=None, departamento=None, numero_d=None):
     """
     Crea un nuevo cliente junto con su dirección asociada,
     usando una única sesión para evitar conflictos entre objetos.
@@ -65,7 +59,7 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None,
             numero_d=str(numero_d).strip()
         )
         sesion.add(nueva_direccion)
-        sesion.flush()  # genera el id_direccion sin cerrar la sesión
+        sesion.flush()
 
         nuevo_cliente = Cliente(
             id_direccion=nueva_direccion.id_direccion,
@@ -92,7 +86,7 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None,
 def modificar_cliente(id_cliente):
     """
     Permite modificar los datos de un cliente existente mediante un menú de opciones.
-    Incluye validaciones y un submenú especial para editar la dirección.
+    Incluye validaciones y un submenú para editar la dirección.
     """
     sesion = Session()
     try:
@@ -104,7 +98,7 @@ def modificar_cliente(id_cliente):
         direccion = sesion.query(Direccion).filter_by(id_direccion=cliente.id_direccion).first()
 
         while True:
-            print("\n--- Modificar Cliente ---")
+            print("\n==== Modificar Cliente ====")
             print(f"Cliente actual: {cliente.nombre} {cliente.apellido} (RUT: {cliente.rut})")
             print(f"Teléfono: {cliente.telefono}")
             print(f"Correo: {cliente.mail if cliente.mail else 'No registrado'}")
@@ -118,12 +112,12 @@ def modificar_cliente(id_cliente):
             print("[3] RUT")
             print("[4] Teléfono")
             print("[5] Correo")
-            print("[6] Dirección completa")
+            print("[6] Dirección")
             print("[0] Volver")
 
             opcion = input("Opción: ").strip()
 
-            # === Nombre ===
+            #Nombre
             if opcion == "1":
                 nuevo_nombre = input("Nuevo nombre: ").strip()
                 if nuevo_nombre:
@@ -133,7 +127,7 @@ def modificar_cliente(id_cliente):
                 else:
                     print("No se ingresó ningún nombre.")
 
-            # === Apellido ===
+            #Apellido
             elif opcion == "2":
                 nuevo_apellido = input("Nuevo apellido: ").strip()
                 if nuevo_apellido:
@@ -143,7 +137,7 @@ def modificar_cliente(id_cliente):
                 else:
                     print("No se ingresó ningún apellido.")
 
-            # === RUT ===
+            #RUT
             elif opcion == "3":
                 nuevo_rut = input("Nuevo RUT: ").strip()
                 if not nuevo_rut:
@@ -156,7 +150,7 @@ def modificar_cliente(id_cliente):
                 sesion.commit()
                 print("RUT actualizado correctamente.")
 
-            # === Teléfono ===
+            #Teléfono
             elif opcion == "4":
                 nuevo_telefono = input("Nuevo teléfono: ").strip()
                 if not nuevo_telefono:
@@ -169,7 +163,7 @@ def modificar_cliente(id_cliente):
                 sesion.commit()
                 print("Teléfono actualizado correctamente.")
 
-            # === Correo ===
+            #Correo
             elif opcion == "5":
                 nuevo_mail = input("Nuevo correo (deje vacío para eliminar): ").strip()
                 if nuevo_mail:
@@ -182,7 +176,7 @@ def modificar_cliente(id_cliente):
                 sesion.commit()
                 print("Correo actualizado correctamente.")
 
-            # === Dirección completa ===
+            #Dirección completa
             elif opcion == "6":
                 print("\n--- Modificar Dirección ---")
 
@@ -243,7 +237,7 @@ def modificar_cliente(id_cliente):
                 sesion.commit()
                 print("Dirección actualizada correctamente.")
 
-            # === Volver ===
+            #Volver
             elif opcion == "0":
                 break
 
@@ -260,7 +254,7 @@ def modificar_cliente(id_cliente):
 
 def desactivar_cliente(id_cliente):
     """
-    Marca un cliente como inactivo (borrado lógico).
+    Marca un cliente como inactivo
     """
     sesion = Session()
     try:
@@ -287,7 +281,7 @@ def desactivar_cliente(id_cliente):
 
 def reactivar_cliente(id_cliente):
     """
-    Vuelve a activar un cliente previamente desactivado.
+    Vuelve a activar un cliente previamente desactivado
     """
     sesion = Session()
     try:

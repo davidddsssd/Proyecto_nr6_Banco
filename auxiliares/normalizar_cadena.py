@@ -17,3 +17,4 @@ def normalizar_cadena(cadena: str) -> str:
     
     # Quita los espacios al inicio y final, y pasa todo a minúsculas
     return s_filtered.strip().lower()
+#def normalizar_cadena()

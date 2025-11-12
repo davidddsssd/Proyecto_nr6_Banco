@@ -8,11 +8,11 @@ from datetime import datetime
 
 def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
     """
-    Crea una cuenta bancaria asociada a un cliente existente.
+    Crea una cuenta bancaria asociada a un cliente existente
 
     Validaciones:
-    - Cliente debe existir y estar activo
-    - Número de cuenta con formato 001-0001-000001
+    - El cliente debe existir y estar activo
+    - El número de cuenta tiene que tener el formato 001-0001-000001
     - Saldo inicial numérico, no negativo y ≤ $5.000.000
     - Tipo de cuenta válido: corriente, ahorro o vista
     """
@@ -23,7 +23,7 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
             print("No se encontró un cliente con ese ID. Regístrelo primero.")
             return
         if not cliente.estado_cliente:
-            print("El cliente está desactivado. No se puede crear una cuenta para un cliente deshabilitado.")
+            print("El cliente está desactivado. No se pudo crear la cuenta.")
             return
 
         if not re.match(r'^\d{3}-\d{4}-\d{6}$', numero_c):
@@ -74,8 +74,8 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
 
 def desactivar_cuenta(id_cuenta):
     """
-    Desactiva (cierra lógicamente) una cuenta bancaria existente.
-    No elimina los registros, solo cambia el estado_cuenta a False.
+    Desactiva una cuenta bancaria existente
+    No elimina los registros, solo cambia el estado_cuenta a False
     """
     sesion = Session()
     try:
@@ -103,8 +103,8 @@ def desactivar_cuenta(id_cuenta):
 
 def reactivar_cuenta(id_cuenta):
     """
-    Reactiva una cuenta bancaria previamente desactivada.
-    Cambia el campo estado_cuenta a True.
+    Reactiva una cuenta bancaria previamente desactivada
+    Cambia el campo estado_cuenta a True
     """
     sesion = Session()
     try:

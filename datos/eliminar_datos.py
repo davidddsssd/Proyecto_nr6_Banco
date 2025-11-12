@@ -2,10 +2,8 @@ from datos.conexion import Session
 
 def eliminar_objeto(objeto):
     """
-    Elimina un objeto existente en la base de datos.
-
-    Parámetros:
-        objeto: instancia del modelo SQLAlchemy que se desea eliminar.
+    Elimina un objeto existente en la base de datos
+    Se necesita la instancia del modelo que se desea eliminar
     """
     session = Session()
     try:
@@ -14,7 +12,7 @@ def eliminar_objeto(objeto):
         print("Objeto eliminado correctamente.")
     except Exception as e:
         session.rollback()
-        print(f"Error al eliminar objeto: {e}")
+        print(f"Error al eliminar el objeto: {e}")
     finally:
         session.close()
 #def eliminar_objeto()

@@ -3,7 +3,7 @@ from iu.menu_admin import menu_admin
 
 def menu_inicio():
     while True:
-        print("\n*** Bienvenido al Sistema de Gestión Bancaria ***")
+        print("\n==== Bienvenido a nuestro sistema de gestión bancaria ====")
         print("[1] Ingresar como Cliente")
         print("[2] Ingresar como Administrador")
         print("[0] Salir")

@@ -2,13 +2,9 @@ from datos.conexion import Session
 
 def obtener_datos_objetos(objeto):
     """
-    Obtiene todos los registros de una tabla (modelo) específica.
-
-    Parámetros:
-        objeto: clase del modelo (por ejemplo, Cliente, Cuenta, etc.)
-
-    Retorna:
-        Lista de objetos encontrados en la tabla.
+    Obtiene todos los registros de una tabla específica
+    Necesita la clase del modelo (Ej. Cliente, Cuenta, etc.)
+    Retorna una lista de objetos encontrados en la tabla
     """
     session = Session()
     try:
