@@ -1,26 +1,27 @@
-from datos.insertar_datos import insertar_objeto
 from modelos.cliente import Cliente
 from modelos.direccion import Direccion
 from auxiliares import normalizar_cadena
-from auxiliares.validaciones import (validar_telefono, validar_correo, formatear_nombre, validar_rut_chileno)
+from auxiliares.validaciones import (
+    validar_telefono,
+    validar_correo,
+    formatear_nombre,
+    validar_rut_chileno
+)
 from datos.conexion import Session
 
 
-def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None):
+def crear_cliente(nombre, apellido, rut, telefono, mail=None,
+                  comuna=None, calle=None, departamento=None, numero_d=None):
     """
-    Crea un nuevo cliente en la base de datos después de validar sus datos.
+    Crea un nuevo cliente junto con su dirección asociada,
+    usando una única sesión para evitar conflictos entre objetos.
+    """
 
-    Realiza:
-    - Validación de RUT, correo y teléfono
-    - Normalización de texto
-    - Verificación de duplicados
-    - Asociación a una dirección existente
-    """
-    if not nombre or not apellido or not rut or not telefono:
-        print("Faltan datos obligatorios (nombre, apellido, RUT o teléfono).")
+    if not nombre or not apellido or not rut or not telefono or not comuna or not calle or not numero_d:
+        print("Faltan datos obligatorios (nombre, apellido, rut, teléfono o dirección).")
         return
 
-    # Limpieza y normalización de campos
+    # Normalización de texto
     nombre = formatear_nombre(nombre.strip())
     apellido = formatear_nombre(apellido.strip())
     rut = rut.strip()
@@ -28,7 +29,7 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
     if mail:
         mail = mail.strip()
 
-    # Validaciones básicas
+    # Validaciones
     if not validar_rut_chileno(rut):
         print("El RUT ingresado no es válido. Ejemplo: 12345678-9")
         return
@@ -43,47 +44,44 @@ def crear_cliente(nombre, apellido, rut, telefono, mail=None, id_direccion=None)
 
     sesion = Session()
     try:
-        # Verificación de duplicados
+        # Verificar duplicados
         clientes = sesion.query(Cliente).all()
         for c in clientes:
             if normalizar_cadena(c.rut) == normalizar_cadena(rut):
                 print("Ya existe un cliente con ese RUT.")
+                sesion.close()
                 return
             if normalizar_cadena(c.telefono) == normalizar_cadena(telefono):
                 print("Ya existe un cliente con ese teléfono.")
+                sesion.close()
                 return
 
-        # Selección de dirección si no se pasa como parámetro
-        if id_direccion is None:
-            print("\nDebe indicar una dirección existente (ID entre 1 y 20).")
-            direcciones = sesion.query(Direccion).all()
-            for d in direcciones:
-                print(f"[{d.id_direccion}] {d.calle}, {d.comuna}")
-            try:
-                id_direccion = int(input("\nIngrese el ID de la dirección: "))
-            except ValueError:
-                print("ID inválido. Debe ser un número entero.")
-                return
+        # Crear dirección y cliente dentro de la misma sesión
+        nueva_direccion = Direccion(
+            comuna=comuna.strip(),
+            calle=calle.strip(),
+            departamento=departamento,
+            numero_d=str(numero_d).strip()
+        )
+        sesion.add(nueva_direccion)
+        sesion.flush()  # genera el id_direccion sin cerrar la sesión
 
-        direccion = sesion.query(Direccion).filter_by(id_direccion=id_direccion).first()
-        if not direccion:
-            print("El ID de dirección no existe en la base de datos.")
-            return
-
-        # Creación del objeto cliente
-        nuevo = Cliente(
-            id_direccion=id_direccion,
+        nuevo_cliente = Cliente(
+            id_direccion=nueva_direccion.id_direccion,
             nombre=nombre,
             apellido=apellido,
             rut=rut,
             telefono=telefono,
             mail=mail
         )
+        sesion.add(nuevo_cliente)
+        sesion.commit()
 
-        insertar_objeto(nuevo)
-        print("Cliente registrado correctamente con datos válidos.")
+        print(f"\nCliente '{nombre} {apellido}' registrado correctamente.")
+        print(f"Dirección guardada: {calle} #{numero_d}, {comuna}")
 
     except Exception as e:
+        sesion.rollback()
         print("Error al registrar cliente:", e)
     finally:
         sesion.close()
