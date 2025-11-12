@@ -5,13 +5,15 @@ from datos.conexion import Session
 import re
 from datetime import datetime
 
+
 def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
     """
     Crea una cuenta bancaria asociada a un cliente existente.
-    Realiza las siguientes validaciones:
+
+    Validaciones:
     - Cliente debe existir y estar activo
     - Número de cuenta con formato 001-0001-000001
-    - Saldo inicial numérico y menor o igual a $5.000.000
+    - Saldo inicial numérico, no negativo y ≤ $5.000.000
     - Tipo de cuenta válido: corriente, ahorro o vista
     """
     sesion = Session()
@@ -68,3 +70,61 @@ def crear_cuenta(id_cliente, numero_c, saldo_inicial, tipo_cuenta, estado=True):
     finally:
         sesion.close()
 #def crear_cuenta()
+
+
+def desactivar_cuenta(id_cuenta):
+    """
+    Desactiva (cierra lógicamente) una cuenta bancaria existente.
+    No elimina los registros, solo cambia el estado_cuenta a False.
+    """
+    sesion = Session()
+    try:
+        cuenta = sesion.query(Cuenta).filter_by(id_cuenta=id_cuenta).first()
+        if not cuenta:
+            print("No se encontró una cuenta con ese ID.")
+            return
+
+        if not cuenta.estado_cuenta:
+            print("La cuenta ya está desactivada o cerrada.")
+            return
+
+        cuenta.estado_cuenta = False
+        sesion.commit()
+
+        print(f"Cuenta {cuenta.numero_c} (ID {cuenta.id_cuenta}) desactivada correctamente.")
+
+    except Exception as e:
+        sesion.rollback()
+        print("Error al desactivar cuenta:", e)
+    finally:
+        sesion.close()
+#def desactivar_cuenta()
+
+
+def reactivar_cuenta(id_cuenta):
+    """
+    Reactiva una cuenta bancaria previamente desactivada.
+    Cambia el campo estado_cuenta a True.
+    """
+    sesion = Session()
+    try:
+        cuenta = sesion.query(Cuenta).filter_by(id_cuenta=id_cuenta).first()
+        if not cuenta:
+            print("No se encontró una cuenta con ese ID.")
+            return
+
+        if cuenta.estado_cuenta:
+            print("La cuenta ya está activa.")
+            return
+
+        cuenta.estado_cuenta = True
+        sesion.commit()
+
+        print(f"Cuenta {cuenta.numero_c} (ID {cuenta.id_cuenta}) reactivada correctamente.")
+
+    except Exception as e:
+        sesion.rollback()
+        print("Error al reactivar cuenta:", e)
+    finally:
+        sesion.close()
+#def reactivar_cuenta()
